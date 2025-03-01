@@ -31,7 +31,7 @@ public class ServerReflectionClient {
     private static final long LOOKUP_RPC_DEADLINE_MS = 10_000;
     private static final ServerReflectionRequest LIST_SERVICES_REQUEST =
             ServerReflectionRequest.newBuilder()
-                    .setListServices("")  // Not sure what this is for, appears to be ignored.
+                    .setListServices("LIST_SERVICES_FIELD_NUMBER")
                     .build();
 
     private final Channel channel;
