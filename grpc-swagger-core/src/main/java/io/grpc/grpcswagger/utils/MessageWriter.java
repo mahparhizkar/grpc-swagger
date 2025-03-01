@@ -29,7 +29,7 @@ public class MessageWriter<T extends Message> implements StreamObserver<T> {
 
     public static <T extends Message> MessageWriter<T> newInstance(TypeRegistry registry, CallResults results){
         return new MessageWriter<>(
-                JsonFormat.printer().usingTypeRegistry(registry).includingDefaultValueFields(),
+                JsonFormat.printer().usingTypeRegistry(registry),
                 results);
     }
 
