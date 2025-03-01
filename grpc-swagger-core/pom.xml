@@ -12,9 +12,10 @@
     <artifactId>grpc-swagger-core</artifactId>
 
     <properties>
-        <grpc.version>1.16.1</grpc.version>
+        <grpc.version>1.67.1</grpc.version>
+        <protobuf.version>4.28.2</protobuf.version>
+        <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <protobuf-java-util.version>3.6.1</protobuf-java-util.version>
         <jcommander.version>1.72</jcommander.version>
         <fastjson.version>1.2.47</fastjson.version>
     </properties>
@@ -35,7 +36,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf-java-util.version}</version>
+            <version>${protobuf.version}</version>
         </dependency>
 
         <dependency>
@@ -115,45 +116,32 @@
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.5.0.Final</version>
+                <version>1.6.2</version>
             </extension>
         </extensions>
+
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
             </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.5.1</version>
+                <version>${protobuf-plugin.version}</version>
                 <configuration>
-                    <protocArtifact>
-                        com.google.protobuf:protoc:3.5.1-1:exe:${os.detected.classifier}
+                    <!-- Protobuf compiler version -->
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
                     </protocArtifact>
+
+                    <!-- gRPC Java plugin configuration -->
                     <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>
-                        io.grpc:protoc-gen-grpc-java:1.16.1:exe:${os.detected.classifier}
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
                     </pluginArtifact>
                 </configuration>
                 <executions>
                     <execution>
+                        <!-- Specify the goals for compiling protobuf and gRPC code -->
                         <goals>
                             <goal>compile</goal>
                             <goal>compile-custom</goal>
@@ -163,5 +151,59 @@
             </plugin>
         </plugins>
     </build>
+
+<!--    <build>-->
+<!--        <extensions>-->
+<!--            <extension>-->
+<!--                <groupId>kr.motd.maven</groupId>-->
+<!--                <artifactId>os-maven-plugin</artifactId>-->
+<!--                <version>1.6.2</version>-->
+<!--            </extension>-->
+<!--        </extensions>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <source>${java.version}</source>-->
+<!--                    <target>${java.version}</target>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <artifactId>maven-failsafe-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <useSystemClassLoader>false</useSystemClassLoader>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <useSystemClassLoader>false</useSystemClassLoader>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.xolstice.maven.plugins</groupId>-->
+<!--                <artifactId>protobuf-maven-plugin</artifactId>-->
+<!--                <version>${protobuf-plugin.version}</version>-->
+<!--                <configuration>-->
+<!--                    <protocArtifact>-->
+<!--                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}-->
+<!--                    </protocArtifact>-->
+<!--                    <pluginId>grpc-java</pluginId>-->
+<!--                    <pluginArtifact>-->
+<!--                        io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}-->
+<!--                    </pluginArtifact>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>compile</goal>-->
+<!--                            <goal>compile-custom</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 </project>
