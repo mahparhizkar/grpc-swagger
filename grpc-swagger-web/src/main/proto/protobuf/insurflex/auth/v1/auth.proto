@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package insurflex.auth.v1;
+
+option go_package = "insurflex/auth/v1";
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "shared/options.proto";
+import "google/protobuf/empty.proto";
+
+service AuthenticationService {
+  rpc GenerateJwtToken(GenerateJwtTokenRequest) returns (GenerateJwtTokenResponse) {}
+  rpc RefreshJwtToken(RefreshTokenRequest) returns (GenerateJwtTokenResponse) {}
+  rpc DestroyJwtToken(DestroyJwtTokenRequest) returns (DestroyJwtTokenResponse) {}
+  rpc AuthUser(AuthUserRequest) returns (AuthUserResponse) {}
+  rpc ActivateTOTP(ActivateTOTPRequest) returns (ActivateTOTPResponse) {
+    option (insurflex.shared.public_route) = false;
+    option (google.api.http) = {
+      post: "/api/v1/auth/2fa/activate",
+      body: "*",
+    };
+  }
+  rpc DeactivateTOTP(DeactivateTOTPRequest) returns (google.protobuf.Empty) {
+    option (insurflex.shared.public_route) = false;
+    option (google.api.http) = {
+      post: "/api/v1/auth/2fa/deactivate",
+      body: "*",
+    };
+  }
+  rpc MakeTotpFlowReadyForUser(TotpFlowReadyRequest) returns (google.protobuf.Empty) {
+    option (insurflex.shared.public_route) = false;
+  }
+  rpc ValidateTOTP(ValidateTOTPRequest) returns (ValidateTOTPResponse) {
+    option (insurflex.shared.public_route) = false;
+  }
+  rpc GenerateRecoveryCodes(GenerateRecoveryCodesRequest) returns (GenerateRecoveryCodesResponse) {
+    option (insurflex.shared.public_route) = false;
+  }
+}
+
+message GenerateJwtTokenRequest {
+  string user_id = 1 [json_name = "user_id"];
+}
+
+message GenerateJwtTokenResponse {
+  string access_token = 1 [json_name = "access_token"];
+  string refresh_token = 2 [json_name = "refresh_token"];
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1 [json_name = "refresh_token"];
+}
+
+message  DestroyJwtTokenRequest {
+  string user_id = 1 [json_name = "user_id"];
+}
+message  DestroyJwtTokenResponse {}
+
+message AuthUserRequest {
+  string token_string = 1 [json_name = "token"];
+}
+
+message AuthUserResponse {
+  string user_id = 1 [json_name = "user_id"];
+}
+
+message ActivateTOTPRequest {
+  string phone_number = 1 [json_name = "phone_number"];
+}
+
+message ActivateTOTPResponse {
+  string url = 1 [json_name = "url"];
+}
+
+message DeactivateTOTPRequest {
+  string code = 1 [json_name = "code"];
+}
+
+message TotpFlowReadyRequest {
+  string user_id = 1 [json_name = "user_id"];
+}
+
+message ValidateTOTPRequest {
+  string user_id = 1 [json_name = "user_id"];
+  string code = 2 [json_name = "code"];
+}
+
+message ValidateTOTPResponse {
+  bool valid = 1 [json_name = "valid"];
+}
+
+message GenerateRecoveryCodesRequest {
+  string user_id = 1 [json_name = "user_id"];
+}
+
+message GenerateRecoveryCodesResponse {
+  repeated string recovery_codes = 1 [json_name = "recovery_codes"];
+}

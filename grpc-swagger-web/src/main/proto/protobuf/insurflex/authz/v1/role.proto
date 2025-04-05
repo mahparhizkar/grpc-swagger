@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package insurflex.authz.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "shared/options.proto";
+
+service RoleService {
+  rpc CreateRole(CreateRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/role",
+      body: "*",
+    };
+  }
+  rpc UpdateRole(UpdateRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/role/{id}",
+      body: "*",
+    };
+  }
+  rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/role/{id}",
+      body: "*",
+    };
+  }
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/roles"
+    };
+  }
+}
+
+message CreateRoleRequest {
+  string slug = 1 [json_name = "slug"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+}
+
+message UpdateRoleRequest {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+}
+
+message DeleteRoleRequest {
+  string id = 1;
+}
+
+message ListRolesResponse {
+  repeated Role data = 1 [json_name = "data"];
+}
+
+message Role {
+  string id = 1 [json_name = "id"];
+  string slug = 2 [json_name = "slug"];
+  string title = 3 [json_name = "title"];
+  string description = 4 [json_name = "description"];
+}
+
+message ListRolesRequest {
+  string user_id = 1 [json_name = "user_id"];
+}

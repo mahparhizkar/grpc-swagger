@@ -1,0 +1,175 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "core/v1/core.proto";
+import "health/product/v1/health_product_commitment_coverages_common.proto";
+import "health/product/v1/health_common.proto";
+
+service HealthCommitmentService {
+  rpc ListHealthCommitments(.insurflex.core.v1.ListCommitmentsRequest) returns (.insurflex.core.v1.ListCommitmentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/commitments"
+    };
+  }
+
+  rpc ListProductCommitments(ListProductCommitmentsRequest) returns (ListProductCommitmentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/commitments/product/{product_id}"
+    };
+  }
+
+  rpc FilterProductCommitmentsByInfo(FilterProductCommitmentsByInfoRequest) returns (FilterProductCommitmentsByInfoResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/commitments/product/{product_id}/filter-by-info"
+    };
+  }
+
+  rpc ListRemainCommitments(ListRemainCommitmentsRequest) returns (.insurflex.core.v1.ListCommitmentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/commitments/product/{product_id}/remain"
+    };
+  }
+
+  rpc LinkCommitmentToProduct(LinkCommitmentToProductRequest) returns (LinkCommitmentToProductResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/commitments/{commitment_id}/product/{product_id}/link"
+    };
+  }
+
+  rpc UnlinkCommitmentFromProduct(UnlinkCommitmentFromProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/commitments/product/{link_id}/unlink"
+    };
+  }
+
+  rpc UpdateCommitmentInfoMerging(UpdateCommitmentInfoMergingRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/info-merging",
+      body: "*"
+    };
+  }
+
+  rpc UpdateCommitmentInfoFinancial(UpdateCommitmentInfoFinancialRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/info-financial",
+      body: "*"
+    };
+  }
+
+  rpc UpdateCommitmentInfoWaitingFields(UpdateCommitmentInfoWaitingFieldsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/{commitment_id}/waiting-period",
+      body: "*"
+    };
+  }
+
+  rpc UpdateCommitmentMLR(.insurflex.core.v1.UpdateProductCommitmentMLRRequest)  returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/mlr",
+      body: "*"
+    };
+  }
+
+  rpc UpdateCommitmentMandatoryFlag(.insurflex.core.v1.UpdateProductCommitmentMandatoryFlagRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/mandatory",
+      body: "*"
+    };
+  }
+
+  rpc UpdateCommitmentBaseFlag(.insurflex.core.v1.UpdateProductCommitmentBaseFlagRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/base",
+      body: "*",
+    };
+  }
+
+  rpc UpdateCommitmentInfoLiability(UpdateCommitmentInfoLiabilityRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/commitments/{link_id}/info-liability"
+      body: "*"
+    };
+  }
+}
+//----------------------------------------
+message UpdateCommitmentInfoWaitingFieldsRequest {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  string product_id = 2 [json_name = "product_id"];
+  optional WAITING_PERIOD_MEASURE waiting_period_measure = 3 [json_name = "waiting_period_measure"];
+  optional int32 waiting_period = 4 [json_name = "waiting_period"];
+}
+//----------------------------------------
+message ListProductCommitmentsRequest {
+  string product_id = 1 [json_name = "product_id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+  optional bool is_base = 4 [json_name = "is_base"];
+  optional bool is_mandatory = 5 [json_name = "is_mandatory"];
+  optional double mlr = 6 [json_name = "mlr"];
+  repeated string commitment_ids = 7 [json_name = "commitment_ids"];
+}
+
+message ListProductCommitmentsResponse {
+  repeated ProductCommitment commitments = 1 [json_name = "commitments"];
+  PageableResponse pageable_response = 2 [json_name = "metadata"];
+}
+//----------------------------------------
+message FilterProductCommitmentsByInfoRequest {
+  string product_id = 1 [json_name = "product_id"];
+  optional COMMITMENT_INFO_FILTER_TYPE filter = 2 [json_name = "filter_type"];
+  optional int32 page = 4 [json_name = "page"];
+  optional int32 page_size = 5 [json_name = "page_size"];
+
+  enum COMMITMENT_INFO_FILTER_TYPE {
+    NO_INFO_MERGING_OR_M_TYPE_NONE = 0;
+    M_TYPE_ACCEPT_MERGE = 1;
+    M_TYPE_CAN_MERGE = 2;
+  }
+}
+
+message FilterProductCommitmentsByInfoResponse {
+  repeated .insurflex.core.v1.BaseCommitment commitments = 1  [json_name = "commitments"];
+  PageableResponse pageable_response = 2 [json_name = "metadata"];
+}
+
+//----------------------------------------
+message ListRemainCommitmentsRequest {
+  string product_id = 1 [json_name = "product_id"];
+}
+//----------------------------------------
+message LinkCommitmentToProductRequest {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  string product_id = 2 [json_name = "product_id"];
+}
+
+message LinkCommitmentToProductResponse {
+  uint64 link_id = 1 [json_name = "link_id"];
+}
+//----------------------------------------
+message UnlinkCommitmentFromProductRequest {
+  uint64 link_id = 1 [json_name = "link_id"];
+}
+//----------------------------------------
+message UpdateCommitmentInfoMergingRequest {
+  uint32 link_id = 1 [json_name = "link_id"];
+  optional MTYPE mtype = 2 [json_name = "mtype"];
+  repeated string can_merge_with = 3 [json_name = "can_merge_with"];
+}
+//----------------------------------------
+message UpdateCommitmentInfoFinancialRequest {
+  optional uint32 link_id = 1 [json_name = "link_id"];
+  optional string discount_measure = 2 [json_name = "discount_measure"];
+  optional string discount_value = 3 [json_name = "discount_value"];
+  repeated string pricing_conditions = 4 [json_name = "pricing_conditions"];
+}
+//----------------------------------------
+message UpdateCommitmentInfoLiabilityRequest {
+  uint32 link_id = 1 [json_name = "link_id"];
+  repeated InfoLiability info_liabilities = 2 [json_name = "info_liabilities"];
+}
+

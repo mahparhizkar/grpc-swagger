@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package com.insurflex.health.policy.grpc.v1;
+option java_package = "com.insurflex.health.policy.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service HealthPlanService{
+  rpc CreatePlan(CreatePlanRequest) returns (CreatePlanResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/policies/plan",
+      body: "*"
+    };
+  }
+}
+
+message CreatePlanRequest {
+  string policy_id = 1 [json_name = "policy_id"];
+  bool is_default = 2 [json_name = "is_default"];
+  string title = 3 [json_name = "title"];
+  string description = 4 [json_name = "description"];
+  uint32 stated_insured_count = 5 [json_name = "stated_insured_count"];
+  uint32 stated_insured_count_60 = 6 [json_name = "stated_insured_count_60"];
+  uint32 stated_insured_count_70 = 7 [json_name = "stated_insured_count_70"];
+  bool has_private_room = 8 [json_name = "has_private_room"];
+  bool has_companion = 9 [json_name = "has_companion"];
+  bool has_jaw_surgery = 10 [json_name = "has_jaw_surgery"];
+  DefaultFinancialInfo default_financial_info = 11 [json_name = "default_financial_info"];
+}
+
+message DefaultFinancialInfo {
+  double default_lol_value = 1 [json_name = "default_lol_value"];
+  uint32 default_franchise_value = 2 [json_name = "default_franchise_value"];
+}
+
+message CreatePlanResponse {
+  string plan_id = 1 [json_name = "plan_id"];
+}

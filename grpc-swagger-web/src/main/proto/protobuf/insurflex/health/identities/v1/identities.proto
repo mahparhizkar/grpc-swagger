@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package com.insurflex.common.identities.grpc.v1;
+option java_package = "com.insurflex.common.identities.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "core/v1/core.proto";
+import "identities/v1/person.proto";
+import "identities/v1/juridical.proto";
+import "identities/v1/shared.proto";
+
+service IdentitiesService {
+
+  rpc ListPolicyHolders(ListPolicyHoldersRequest) returns (ListPolicyHoldersResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/common/identities/policy-holders/{type}"
+    };
+  }
+
+  rpc ListPolicyHolderProfileData(ListPolicyHolderProfileDataRequest) returns (ListPolicyHolderProfileDataResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/common/identities/policy-holder-profile-data/{policy_id}"
+    };
+  }
+
+  rpc ListRepresentatives(ListRepresentativesRequest) returns (com.insurflex.identities.v1.ListRepresentativesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/common/identities/representatives/{policy_id}"
+    };
+  }
+}
+
+message ListPolicyHoldersRequest {
+  .insurflex.core.v1.POLICY_HOLDER_TYPE type = 1 [json_name = "type"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+}
+
+message ListPolicyHoldersResponse {
+  .insurflex.core.v1.POLICY_HOLDER_TYPE type = 1 [json_name = "type"];
+  oneof policy_holders {
+    com.insurflex.identities.v1.ListPersonsResponse natural_policy_holders = 2 [json_name = "data"];
+    com.insurflex.identities.v1.ListJuridicalsResponse juridical_policy_holders = 3 [json_name = "data"];
+  }
+}
+
+message ListPolicyHolderProfileDataRequest {
+  string policy_id = 1 [json_name = "policy_id"];
+}
+
+message ListPolicyHolderProfileDataResponse {
+  repeated com.insurflex.identities.v1.BasePhoneNumber phone_numbers = 1 [json_name = "phone_numbers"];
+  repeated com.insurflex.identities.v1.BaseAddress addresses = 2 [json_name = "addresses"];
+  repeated com.insurflex.identities.v1.BaseBankAccount bank_accounts = 3 [json_name = "bank_accounts"];
+}
+
+message ListRepresentativesRequest {
+  string policy_id = 1 [json_name = "policy_id"];
+}

@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package com.insurflex.premium.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+option go_package = "insurflex/premium/v1";
+
+service HealthPremiumService {
+  rpc CreateGroupPremium(CreateGroupPremiumRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/premium/health-care",
+      body: "*",
+    };
+  }
+
+  rpc ReviseGroupPremium(ReviseGroupPremiumRequest) returns (ReviseGroupPremiumResponse) {}
+
+  rpc GetGroupPremium(GetGroupPremiumRequest) returns (GetGroupPremiumResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/premium/health/{policy_id}"
+    };
+  }
+
+  rpc CreateCommitmentRule(CreateCommitmentRuleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/premium/health/commitment-rule",
+      body: "*",
+    };
+  }
+
+  rpc UpdateCommitmentRule(UpdateCommitmentRuleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/premium/health/commitment-rule",
+      body: "*",
+    };
+  }
+}
+
+message GetGroupPremiumRequest {
+  string policy_id = 1 [json_name = "policy_id"];
+}
+
+message CreateCommitmentRuleRequest {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  string sector_id = 2 [json_name = "sector_id"];
+  double vnumber = 3 [json_name = "vnumber"];
+  repeated Rate rates = 4 [json_name = "rates"];
+}
+
+message UpdateCommitmentRuleRequest {
+  string id = 1 [json_name = "id"];
+  double vnumber = 3 [json_name = "vnumber"];
+  repeated Rate rates = 4 [json_name = "rates"];
+}
+
+message Rate {
+  uint64 from = 1 [json_name = "from"];
+  uint64 to = 2 [json_name = "to"];
+  double rate = 3 [json_name = "rate"];
+}
+
+message CreateGroupPremiumRequest {
+  repeated Plan plans = 1 [json_name = "plans"];
+  uint64 province_id = 2 [json_name = "province_id"];
+  uint64 activity_type_id = 9 [json_name = "activity_type_id"];
+  double contagious_surcharge_rate = 10 [json_name = "contagious_surcharge_rate"];
+  bool is_insurance_company = 11 [json_name = "is_insurance_company"];
+  bool is_stakeholder = 12 [json_name = "is_stakeholder"];
+  double actuary_surcharge_rate = 13 [json_name = "actuary_surcharge_rate"];
+  double actuary_discount_rate = 14 [json_name = "actuary_discount_rate"];
+  double portfolio_discount_rate = 15 [json_name = "portfolio_discount_rate"];
+  double service_network_discount_rate = 16 [json_name = "service_network_discount_rate"];
+  Seasons start_season = 17 [json_name = "start_season"];
+  string pcm_id = 18 [json_name = "pcm_id"];
+  string policy_id = 19 [json_name = "policy_id"];
+}
+
+message GetGroupPremiumResponse {
+  repeated PlanResult plans = 2 [json_name = "plans"];
+  PremiumResult contract = 3 [json_name = "contract"];
+  uint64 tax = 4 [json_name = "tax"];
+  uint64 payable_premium = 5 [json_name = "payable_premium"];
+}
+
+message PremiumResult {
+  uint64 premium = 1 [json_name = "premium"];
+  uint64 discount = 2 [json_name = "discount"];
+  uint64 surcharge = 3 [json_name = "surcharge"];
+}
+
+message PlanResult {
+  string plan_id = 1 [json_name = "plan_id"];
+  uint64 commitment_premium = 2 [json_name = "commitment_premium"];
+  uint64 commitment_discount = 3 [json_name = "commitment_discount"];
+  uint64 commitment_surcharge = 4 [json_name = "commitment_surcharge"];
+  uint64 plan_surcharge = 8 [json_name = "plan_surcharge"];
+  uint64 plan_discount = 7 [json_name = "plan_discount"];
+  uint64 premium_over70 = 9 [json_name = "premium_over70"];
+  uint64 premium_over70_per_individual = 10 [json_name = "premium_over70_per_individual"];
+  uint64 premium_60_to_70 = 11 [json_name = "premium_60_to_70"];
+  uint64 premium_60_to_70_per_individual = 12 [json_name = "premium_60_to_70_per_individual"];
+  uint64 premium_per_individual = 13 [json_name = "premium_per_individual"];
+  uint64 per_capita_premium = 5 [json_name = "per_capita_premium"];
+  uint64 plan_premium = 6 [json_name = "plan_premium"];
+}
+
+message Plan {
+  string plan_id = 1;
+  repeated Commitment commitments = 2 [json_name = "commitments"];
+  uint64 insured_count = 3 [json_name = "insured_count"];
+  uint64 insured_count70 = 4 [json_name = "insured_count_70"];
+  uint64 insured_count60 = 5 [json_name = "insured_count_60"];
+  bool has_jaw_surgery = 6 [json_name = "has_jaw_surgery"];
+  bool has_private_room = 7 [json_name = "has_private_room"];
+  bool has_companion = 8 [json_name = "has_companion"];
+}
+
+message Commitment {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  uint64 amount = 2 [json_name = "amount"];
+  double deductible = 3 [json_name = "deductible"];
+  bool is_base = 4 [json_name = "is_base"];
+  bool is_mergeable = 5 [json_name = "is_mergeable"];
+  repeated string merged_ids = 6 [json_name = "merged_ids"];
+}
+
+enum Seasons {
+  SPRING = 0;
+  SUMMER = 1;
+  AUTUMN = 2;
+  WINTER = 3;
+}
+
+message ReviseGroupPremiumRequest {
+  string policy_id = 1;
+  repeated RevisedPlan plans = 2;
+}
+
+message ReviseGroupPremiumResponse {
+  PremiumResult contract = 3 [json_name = "contract"];
+  uint64 tax = 4 [json_name = "tax"];
+  uint64 payable_premium = 5 [json_name = "payable_premium"];
+}
+
+message RevisedPlan {
+  string plan_id = 1 [json_name = "plan_id"];
+  uint64 premium_per_individual = 2 [json_name = "premium_per_individual"];
+}

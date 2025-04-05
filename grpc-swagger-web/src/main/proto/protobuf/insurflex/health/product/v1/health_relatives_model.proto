@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "health/product/v1/health_common.proto";
+
+service HealthRelativesModelsService {
+  rpc CreateRelativesModel(CreateRelativesModelRequest) returns (CreateRelativesModelResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/relatives-models",
+      body: "*"
+    };
+  }
+  rpc GetRelativesModel(GetRelativesModelRequest) returns (RelativesModel) {
+    option (google.api.http) = {
+      get: "/api/v1/health/relatives-models/{id}"
+    };
+  }
+  rpc ListRelativesModels(PageableRequest) returns (ListRelativesModelsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/relatives-models"
+    };
+  }
+  rpc UpdateRelativesModel(UpdateRelativesModelRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/relatives-models/{id}",
+      body: "*"
+    };
+  }
+  rpc DeleteRelativesModel(DeleteRelativesModelRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/relatives-models/{id}"
+    };
+  }
+  rpc LinkRelativesModelToProduct(LinkRelativesModelToProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/health/relatives-models/{relatives_model_id}/product/{product_id}/link"
+    };
+  }
+  rpc UnlinkRelativesModelFromProduct(UnlinkRelativesModelFromProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/relatives-models/product/{product_id}/unlink"
+    };
+  }
+}
+//----------------------------------------
+message RelativesModel {
+  optional string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  repeated MetaData data = 3 [json_name = "data"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+//----------------------------------------
+message CreateRelativesModelRequest {
+  string title = 2 [json_name = "title"];
+  repeated MetaDataDetails data = 3 [json_name = "data"];
+}
+
+message CreateRelativesModelResponse {
+  string id = 1 [json_name = "id"];
+}
+//----------------------------------------
+message GetRelativesModelRequest {
+  string id = 1 [json_name = "id"];
+}
+//----------------------------------------
+message ListRelativesModelsResponse {
+  repeated RelativesModel relatives_models = 1 [json_name = "data"];
+  PageableResponse pageable_response = 2 [json_name = "metadata"];
+}
+//----------------------------------------
+message UpdateRelativesModelRequest {
+  string id = 1 [json_name = "id"];
+  optional string title = 2 [json_name = "title"];
+  repeated MetaData data = 3 [json_name = "data"];
+}
+//----------------------------------------
+message DeleteRelativesModelRequest {
+  string id = 1 [json_name = "id"];
+}
+//----------------------------------------
+message LinkRelativesModelToProductRequest {
+  string relatives_model_id = 1 [json_name = "relatives_model_id"];
+  string product_id = 2 [json_name = "product_id"];
+}
+//----------------------------------------
+message UnlinkRelativesModelFromProductRequest {
+  string product_id = 1 [json_name = "product_id"];
+}
+//----------------------------------------
+

@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package com.insurflex.identities.v1;
+
+option go_package = "insurflex/identities/v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "identities/v1/shared.proto";
+
+service JuridicalInfoService {
+  rpc ListJuridicalAddresses(JuridicalRequest) returns (ListJuridicalAddressesResponse);
+  rpc CreateJuridicalAddress(CreateJuridicalAddressRequest) returns (google.protobuf.Empty);
+
+  rpc ListJuridicalPhoneNumbers(JuridicalRequest) returns (ListJuridicalPhoneNumbersResponse);
+  rpc CreateJuridicalPhoneNumber(CreateJuridicalPhoneNumberRequest) returns (google.protobuf.Empty);
+
+  rpc ListJuridicalBankAccounts(JuridicalRequest) returns (ListJuridicalBankAccountsResponse);
+  rpc CreateJuridicalBankAccount(CreateJuridicalBankAccountRequest) returns (google.protobuf.Empty);
+}
+
+message CreateJuridicalAddressRequest {
+  string juridical_id = 1[json_name = "juridical_id"];
+  string address = 5 [json_name = "address"];
+  uint64 city_id = 4 [json_name = "city_id"];
+  string zip_code = 6 [json_name = "zip_code"];
+  bool is_default = 7 [json_name = "is_default"];
+}
+
+message CreateJuridicalPhoneNumberRequest {
+  string person_id = 1 [json_name = "persons_id"];
+  string Number = 2 [json_name = "number"];
+  PhoneType phone_type = 3 [json_name = "phone_type"];
+}
+
+message CreateJuridicalBankAccountRequest {
+  string title = 1;
+  optional string bank_id = 2;
+  string acc_number = 3;
+  string iban = 4;
+  string juridical_id = 5;
+}
+
+message JuridicalRequest {
+  string juridical_id = 1;
+}
+
+message ListAddressesRequest {
+  string juridical_id = 1 [json_name = "juridical_id"];
+}
+
+message ListPhoneNumbersRequest {
+  string juridical_id = 1 [json_name = "juridical_id"];
+}
+message ListBankAccountsRequest {
+  string juridical_id = 1 [json_name = "juridical_id"];
+}
+
+message ListJuridicalPhoneNumbersResponse {
+  repeated BasePhoneNumber data = 1 [json_name = "data"];
+}
+
+message ListJuridicalAddressesResponse {
+  repeated BaseAddress data = 1;
+}
+
+message ListJuridicalBankAccountsResponse {
+  repeated BaseBankAccount data = 1 [json_name = "bank_account"];
+}

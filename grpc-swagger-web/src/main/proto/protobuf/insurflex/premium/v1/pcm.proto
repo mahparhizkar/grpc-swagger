@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package com.insurflex.premium.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+option go_package = "insurflex/premium/v1";
+
+service PCMService {
+  rpc CreatePCM(CreatePCMRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/premium/pcm"
+      body: "*"
+    };
+  }
+
+  rpc ListPCM(ListPCMRequest) returns (ListPCMResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/premium/pcm"
+    };
+  }
+}
+
+message CreatePCMRequest {
+  string title = 1 [json_name = "title"];
+  string sector_id = 2 [json_name = "sector_id"];
+  string description = 3 [json_name = "description"];
+}
+
+message ListPCMRequest {
+  string sector_id = 1 [json_name = "sector_id"];
+}
+
+message ListPCMResponse {
+  repeated PCM data = 1 [json_name = "data"];
+}
+
+message PCM {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string sector_id = 3 [json_name = "sector_id"];
+  string description = 4 [json_name = "description"];
+}

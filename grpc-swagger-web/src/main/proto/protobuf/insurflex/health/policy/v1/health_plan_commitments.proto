@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package com.insurflex.health.policy.grpc.v1;
+option java_package = "com.insurflex.health.policy.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "health/product/v1/health_common.proto";
+import "health/product/v1/health_product_commitment_coverages_common.proto";
+
+service HealthPlanCommitments{
+  rpc ListPlanCommitments(ListPlanCommitmentsRequest) returns (ListPlanCommitmentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/policies/commitments/plan/{plan_id}"
+    };
+  }
+}
+
+message ListPlanCommitmentsResponse {
+  repeated PlanCommitment plan_commitments = 1 [json_name = "plan_commitments"];
+  com.insurflex.health.product.grpc.v1.PageableResponse pageableResponse = 2 [json_name = "metadata"];
+}
+
+message ListPlanCommitmentsRequest {
+  string plan_id = 1 [json_name = "plan_id"];
+  repeated string plan_commitment_ids = 2 [json_name = "plan_commitment_ids"];
+  repeated string commitment_ids = 3 [json_name = "commitment_ids"];
+  optional uint32 page = 4 [json_name = "page"];
+  optional uint32 page_size = 5 [json_name = "page_size"];
+}
+
+message PlanCommitment {
+  string id = 1 [json_name = "id"];
+  string plan_id = 2 [json_name = "plan_id"];
+  string product_id = 3 [json_name = "product_id"];
+  string commitment_id = 4 [json_name = "commitment_id"];
+  InfoMaster info_master = 5 [json_name = "info_master"];
+  repeated com.insurflex.health.product.grpc.v1.Coverage coverages = 6 [json_name = "coverages"];
+  com.insurflex.health.product.grpc.v1.InfoFinancial info_financial = 7 [json_name = "info_financial"];
+  repeated com.insurflex.health.product.grpc.v1.InfoLiability info_liabilities = 8 [json_name = "info_liabilities"];
+  string if_merged = 9 [json_name = "if_merged"];
+  com.insurflex.health.product.grpc.v1.WAITING_PERIOD_MEASURE waiting_period_measure = 10 [json_name = "waiting_period_measure"];
+  int32 waiting_period = 11 [json_name = "waiting_period"];
+  string patient_care_type = 12 [json_name = "patient_care_type"];
+}
+
+message InfoMaster {
+  string title = 1 [json_name = "title"];
+  string description = 2 [json_name = "description"];
+  bool is_mandatory = 3 [json_name = "is_mandatory"];
+  bool is_base = 4 [json_name = "is_base"];
+  double mlr = 5 [json_name = "mlr"];
+}

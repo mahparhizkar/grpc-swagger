@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package insurflex.authz.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "shared/options.proto";
+import "authz/v1/role.proto";
+
+service AccessControlService {
+  rpc HasPermission(PermissionRequest) returns (PermissionResponse) {}
+  rpc AssignUsersToRole(AssignUsersToRoleRequest) returns (google.protobuf.Empty) {}
+  rpc UnassignUsersFromRole(UnassignUsersFromRoleRequest) returns (google.protobuf.Empty) {}
+  rpc AssignPermissionsToRole(RolePermissionsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/role/{role_id}/permissions",
+      body: "*",
+    };
+    option (insurflex.shared.permissions) = "can_assign_permissions_to_role";
+  }
+  rpc UnassignPermissionsFromRole(RolePermissionsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/role/{role_id}/permissions"
+    };
+    option (insurflex.shared.permissions) = "can_assign_permissions_to_role";
+  }
+}
+
+message PermissionRequest {
+  string user_id = 1 [json_name = "user_id"];
+  string fqmn = 2 [json_name = "fqmn"];
+}
+
+message PermissionResponse {
+  bool is_authorized = 1 [json_name = "is_authorized"];
+}
+
+message RolePermissionsRequest {
+  string role_id = 1 [json_name = "role_id"];
+  repeated string permissions = 2 [json_name = "permissions"];
+}
+
+message AssignUsersToRoleRequest {
+  repeated string user_ids = 1 [json_name = "user_ids"];
+  string role_id = 2 [json_name = "role_id"];
+}
+
+message UnassignUsersFromRoleRequest {
+  repeated string user_ids = 1 [json_name = "user_ids"];
+  string role_id = 2 [json_name = "role_id"];
+}
+
+message GetRolePoliciesResponse {
+  repeated Policy data = 1 [json_name = "data"];
+}
+
+message Policy {
+  string object = 1 [json_name = "object"];
+  string action = 2 [json_name = "action"];
+}
+

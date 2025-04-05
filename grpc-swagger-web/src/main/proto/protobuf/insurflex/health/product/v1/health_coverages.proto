@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "core/v1/core.proto";
+import "health/product/v1/health_common.proto";
+import "health/product/v1/health_product_commitment_coverages_common.proto";
+
+service HealthCoverageService {
+  rpc ListCoverages(ListCoveragesRequest) returns (.insurflex.core.v1.ListCoveragesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/coverages/commitment/{commitment_id}"
+    };
+  }
+  rpc ListProductCoverages(ListProductCoveragesRequest) returns (ListProductCoveragesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/coverages/product/{link_id}"
+    };
+  }
+  rpc LinkCoverageToCommitment(LinkCoverageToCommitmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/health/coverages/{coverage_id}/commitment/{link_id}/link"
+    };
+  }
+  rpc UnlinkCoverageFromCommitment(UnlinkCoverageFromCommitmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/coverages/{coverage_id}/commitment/{link_id}/unlink"
+    };
+  }
+
+  rpc ListRemainCoverages(ListRemainCoveragesRequest) returns (.insurflex.core.v1.ListCoveragesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/coverages/commitment/{commitment_id}/{link_id}/remain"
+    };
+  }
+
+  rpc UpdateCoverageInfo(UpdateCoverageInfoRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/coverages/{coverage_id}/{link_id}/coverage-info"
+      body: "*"
+    };
+  }
+
+  rpc UpdateCoveragesInfoFinancial(UpdateCoveragesInfoFinancialRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/coverages/{link_id}/info-financial"
+      body: "*"
+    };
+  }
+
+  rpc UpdateCoveragesInfoLiabilities(UpdateCoveragesInfoLiabilitiesRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/coverages/{link_id}/info-liabilities"
+      body: "*"
+    };
+  }
+}
+
+//----------------------------------------
+message ListCoveragesRequest {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+}
+//----------------------------------------
+message UpdateCoverageInfoRequest {
+  uint32 link_id = 1 [json_name = "link_id"];
+  string coverage_id = 2 [json_name = "coverage_id"];
+  optional uint32 waiting_period = 3 [json_name = "waiting_period"];
+  optional WAITING_PERIOD_MEASURE waiting_period_measure = 4 [json_name = "waiting_period_measure"];
+}
+//----------------------------------------
+message UpdateCoveragesInfoFinancialRequest {
+  uint32 link_id = 1 [json_name = "link_id"];
+  repeated string coverage_ids = 2 [json_name = "coverage_ids"];
+  optional string discount_measure = 3 [json_name = "discount_measure"];
+  optional string discount_value = 4 [json_name = "discount_value"];
+  repeated string pricing_conditions = 5 [json_name = "pricing_conditions"];
+}
+//----------------------------------------
+message UpdateCoveragesInfoLiabilitiesRequest {
+  uint64 link_id = 1 [json_name = "link_id"];
+  repeated string coverage_ids = 2 [json_name = "coverage_ids"];
+  repeated InfoLiability info_liabilities = 3 [json_name = "info_liabilities"];
+}
+//----------------------------------------
+message ListProductCoveragesRequest {
+  uint64 link_id = 1 [json_name = "link_id"];
+  optional string coverage_id = 2 [json_name = "coverage_id"];
+}
+
+message ListProductCoveragesResponse {
+  repeated Coverage coverages = 1 [json_name = "coverages"];
+}
+//----------------------------------------
+message LinkCoverageToCommitmentRequest {
+  string coverage_id = 1 [json_name = "coverage_id"];
+  uint64 link_id = 2 [json_name = "link_id"];
+}
+//----------------------------------------
+message UnlinkCoverageFromCommitmentRequest {
+  string coverage_id = 1 [json_name = "coverage_id"];
+  uint64 link_id = 2 [json_name = "link_id"];
+}
+//----------------------------------------
+message ListRemainCoveragesRequest {
+  uint64 link_id = 1 [json_name = "link_id"];
+  string commitment_id = 2 [json_name = "commitment_id"];
+}
+//----------------------------------------

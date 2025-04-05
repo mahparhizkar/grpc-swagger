@@ -1,0 +1,109 @@
+syntax = "proto3";
+package insurflex.core.v1;
+option go_package = "gitlab.hama.net/services/protobuf/go/insurflex/core/v1";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service BaseInfoService {
+  rpc ListCountries(ListCountriesRequest) returns (ListCountriesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/countries",
+    };
+  }
+  rpc ListProvinces(ListProvincesRequest) returns (ListProvincesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/provinces",
+    };
+  }
+  rpc ListCounties(ListCountiesRequest) returns (ListCountiesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/counties",
+    };
+  }
+  rpc ListCities(ListCitiesRequest) returns (ListCitiesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/cities",
+    };
+  }
+  rpc ListRegions(ListRegionsRequest) returns (ListRegionsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/regions",
+    };
+  }
+
+  rpc GetProvinceBySlug(GetProvinceRequest) returns (BaseGeo) {}
+  rpc ListActivityTypes(ListActivityTypesRequest) returns (ListActivityTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/base-info/activity-types",
+    };
+  };
+  rpc GetActivityTypeBySlug(GetActivityTypeBySlugRequest) returns (GetActivityTypeBySlugResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/base-info/activity-types/{slug}",
+    };
+  }
+}
+
+message ListActivityTypesResponse {
+  repeated ActivityType data = 1 [json_name = "data"];
+}
+
+message GetActivityTypeBySlugResponse {
+  ActivityType activity_type = 1 [json_name = "activity_type"];
+}
+
+message ListActivityTypesRequest {}
+
+message GetActivityTypeBySlugRequest {
+  string slug = 1 [json_name = "slug"];
+}
+
+message ActivityType {
+  int32 id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string slug = 3 [json_name = "slug"];
+}
+
+message ListCountriesRequest {}
+
+message ListProvincesRequest {
+  optional uint32 country_id = 1 [json_name = "country_id"];
+  optional string country_slug = 2 [json_name = "country_slug"];
+}
+message ListCountiesRequest {
+  optional uint32 province_id = 1 [json_name = "province_id"];
+  optional string province_slug = 2 [json_name = "province_slug"];
+}
+message ListCitiesRequest {
+  optional uint32 county_id = 1 [json_name = "county_id"];
+  optional string county_slug = 2 [json_name = "county_slug"];
+}
+message ListRegionsRequest {
+  optional uint32 city_id = 1 [json_name = "city_id"];
+  optional string city_slug = 2 [json_name = "city_slug"];
+}
+
+message BaseGeo {
+  uint32 id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string slug = 3 [json_name = "slug"];
+}
+
+message ListCountriesResponse {
+  repeated BaseGeo data = 1 [json_name = "data"];
+}
+message ListProvincesResponse {
+  repeated BaseGeo data = 1 [json_name = "data"];
+}
+message ListCountiesResponse {
+  repeated BaseGeo data = 1 [json_name = "data"];
+}
+message ListCitiesResponse {
+  repeated BaseGeo data = 1 [json_name = "data"];
+}
+message ListRegionsResponse {
+  repeated BaseGeo data = 1 [json_name = "data"];
+}
+message GetProvinceRequest {
+  string slug = 1 [json_name = "slug"];
+}

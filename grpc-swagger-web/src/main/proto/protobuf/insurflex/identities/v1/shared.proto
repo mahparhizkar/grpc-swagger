@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package com.insurflex.identities.v1;
+
+option go_package = "insurflex/identities/v1";
+
+message BasePhoneNumber {
+  string id = 1 [json_name= "id"];
+  string number = 2 [json_name = "number"];
+  string type = 3 [json_name = "type"];
+  bool is_default = 4 [json_name = "is_default"];
+}
+
+message BaseAddress {
+  string id = 1 [json_name = "id"];
+  string address = 2 [json_name = "address"];
+}
+
+message BaseBankAccount {
+  string id = 1 [json_name = "id"];
+  string iban = 2 [json_name = "iban"];
+  string title = 3 [json_name = "title"];
+  string account_number = 4 [json_name = "account_number"];
+}
+
+message Metadata {
+  uint32 total = 1 [json_name = "total"];
+  uint32 current_page = 2 [json_name = "current_page"];
+  uint32 page_size = 3 [json_name = "page_size"];
+}
+
+enum PhoneType {
+  CELLULAR = 0;
+  LANDLINE = 1;
+  SATELLITE = 2;
+}

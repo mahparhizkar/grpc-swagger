@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "health/product/v1/health_common.proto";
+
+service HealthRelativesTypeService {
+  rpc CreateRelativesType(CreateRelativesTypeRequest) returns (CreateRelativesTypeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/relatives-types",
+      body: "*"
+    };
+  }
+  rpc GetRelativesType(GetRelativesTypeRequest) returns (GetRelativesTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/relatives-types/{id}"
+    };
+  }
+  rpc ListRelativesTypes(PageableRequest) returns (ListRelativesTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/relatives-types"
+    };
+  }
+  rpc UpdateRelativesType(UpdateRelativesTypeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/relatives-types/{id}",
+      body: "*"
+    };
+  }
+  rpc DeleteRelativesType(DeleteRelativesTypeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/relatives-types/{id}"
+    };
+  }
+}
+//----------------------------------------
+message CreateRelativesTypeRequest {
+  string title = 1 [json_name = "title"];
+  optional string slug = 2 [json_name = "slug"];
+}
+
+message CreateRelativesTypeResponse {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string slug = 3 [json_name = "slug"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+//----------------------------------------
+message GetRelativesTypeRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message GetRelativesTypeResponse {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string slug = 3 [json_name = "slug"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+//----------------------------------------
+message ListRelativesTypesResponse {
+  repeated GetRelativesTypeResponse relatives_types = 1 [json_name = "data"];
+  PageableResponse pageable_response = 2 [json_name = "metadata"];
+}
+//----------------------------------------
+message UpdateRelativesTypeRequest {
+  string id = 1 [json_name = "id"];
+  optional string title = 2 [json_name = "title"];
+  optional string slug = 3 [json_name = "slug"];
+}
+//----------------------------------------
+message DeleteRelativesTypeRequest {
+  string id = 1 [json_name = "id"];
+}
+//----------------------------------------

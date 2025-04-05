@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "core/v1/core.proto";
+
+message InfoLiability {
+  string title = 1 [json_name = "title"];
+  string slug = 2 [json_name = "slug"];
+  optional FRANCHISE_MEASURE franchise_measure = 3 [json_name = "franchise_measure"];
+  optional string franchise_value = 4 [json_name = "franchise_value"];
+  optional DEDUCTIBLE_MEASURE deductible_measure = 5 [json_name = "deductible_measure"];
+  optional string deductible_value = 6 [json_name = "deductible_value"];
+  optional LOU_MEASURE lou_measure = 7 [json_name = "lou_measure"];
+  optional string lou_value = 8 [json_name = "lou_value"];
+  optional double lol_value = 9 [json_name = "lol_value"];
+
+
+  enum FRANCHISE_MEASURE {
+    FRANCHISE_NOT_SET = 0;
+    FRANCHISE_AMOUNT = 1;
+    FRANCHISE_PERCENTILE = 2;
+  }
+
+  enum DEDUCTIBLE_MEASURE {
+    DEDUCTIBLE_NOT_SET = 0;
+    DEDUCTIBLE_AMOUNT = 1;
+    DEDUCTIBLE_PERCENTILE = 2;
+  }
+
+  enum LOU_MEASURE {
+    LOU_NOT_SET = 0;
+    LOU_COUNT = 1;
+    LOU_AMOUNT = 2;
+  }
+}
+//----------------------------------------
+message InfoFinancial {
+  DISCOUNT_MEASURE discount_measure = 1 [json_name = "discount_measure"];
+  string discount_value = 2 [json_name = "discount_value"];
+  repeated string pricing_conditions = 3 [json_name = "pricing_conditions"];
+
+  enum DISCOUNT_MEASURE {
+    DISCOUNT_NOT_SET = 0;
+    DISCOUNT_AMOUNT = 1;
+    DISCOUNT_PERCENTILE = 2;
+  }
+}
+//----------------------------------------
+message InfoMerging {
+  MTYPE mtype = 1 [json_name = "mtype"];
+  repeated string can_merge_with = 2 [json_name = "can_merge_with"];
+}
+
+enum MTYPE {
+  NONE = 0;
+  ACCEPT_MERGE = 1;
+  CAN_MERGE = 2;
+}
+//----------------------------------------
+message ProductCommitment {
+  .insurflex.core.v1.BaseCommitment data = 1 [json_name = "data"];
+  CommitmentInfo info = 2 [json_name = "info"];
+  repeated Coverage coverages = 3 [json_name = "coverages"];
+}
+//----------------------------------------
+message CommitmentInfo {
+  string id = 1 [json_name = "id"];
+  string product_commitments_id = 2 [json_name = "product_commitments_id"];
+  uint64 product_commitments_link_id = 3 [json_name = "product_commitments_link_id"];
+  InfoMerging info_merging = 4 [json_name = "info_merging"];
+  repeated InfoLiability info_liabilities = 5 [json_name = "info_liabilities"];
+  InfoFinancial info_financial = 6 [json_name = "info_financial"];
+  WAITING_PERIOD_MEASURE waiting_period_measure = 7 [json_name = "waiting_period_measure"];
+  int32 waiting_period = 8 [json_name = "waiting_period"];
+  string created_at = 9 [json_name = "created_at"];
+  string updated_at = 10 [json_name = "updated_at"];
+}
+//----------------------------------------
+message Coverage {
+  string coverage_id = 1 [json_name = "coverage_id"];
+  CoverageInfo info_coverage = 2 [json_name = "info_coverage"];
+  WAITING_PERIOD_MEASURE waiting_period_measure = 3 [json_name = "waiting_period_measure"];
+  int32 waiting_period = 4 [json_name = "waiting_period"];
+  repeated InfoLiability info_liabilities = 5 [json_name = "info_liabilities"];
+  InfoFinancial info_financial = 6 [json_name = "info_financial"];
+}
+
+enum WAITING_PERIOD_MEASURE {
+  DAY = 0;
+  MONTH = 1;
+  YEAR = 2;
+}
+
+message CoverageInfo{
+  string title = 1 [json_name = "title"];
+  string description = 2 [json_name = "description"];
+}
+//----------------------------------------

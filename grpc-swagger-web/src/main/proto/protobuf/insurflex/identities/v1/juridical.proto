@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package com.insurflex.identities.v1;
+
+option go_package = "insurflex/identities/v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/descriptor.proto";
+import "identities/v1/shared.proto";
+
+service JuridicalService {
+  rpc ListJuridicals(ListJuridicalsRequest) returns (ListJuridicalsResponse) {}
+  rpc CreateJuridical(CreateJuridicalRequest) returns (google.protobuf.Empty) {}
+  rpc ListJuridicalRepresentatives(ListRepresentativesRequest) returns (ListRepresentativesResponse) {}
+  rpc CreateJuridicalRepresentative(CreateRepresentativeRequest) returns (google.protobuf.Empty) {}
+
+  rpc CreateJuridicalType(CreateJuridicalTypeRequest) returns (google.protobuf.Empty) {}
+}
+
+message CreateJuridicalTypeRequest {
+  string title = 1 [json_name = "title"];
+  optional string description = 2 [json_name = "description"];
+  bool is_government = 3 [json_name = "is_government"];
+}
+
+message CreateJuridicalRequest {
+  string title = 1 [json_name = "title"];
+  bool is_our_stakeholder = 2 [json_name = "is_our_stakeholder"];
+  optional uint32 activity_type_id = 3 [json_name = "activity_type_id"];
+  string type_id = 4 [json_name = "type_id"];
+  JURIDICAL_OWNERSHIP_TYPE owner_ship_type = 5 [json_name = "owner_ship_type"];
+}
+
+enum JURIDICAL_OWNERSHIP_TYPE {
+  PUBLIC = 0;
+  PRIVATE = 1;
+  GOVERNMENT = 2;
+  SHARED = 3;
+}
+
+message ListJuridicalsRequest {
+  optional int32 page = 1 [json_name = "page"];
+  optional int32 page_size = 2 [json_name = "page_size"];
+}
+
+message ListJuridicalsResponse {
+  repeated Juridical data = 1;
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message ListRepresentativesRequest {
+  string juridical_id = 1 [json_name = "juridical_id"];
+  optional int32 page = 2 [json_name = "page"];
+  optional int32 page_size = 3 [json_name = "page_size"];
+}
+
+message Juridical {
+  string id = 1;
+  string title = 2;
+}
+
+message CreateRepresentativeRequest {
+  string juridical_id = 1 [json_name = "juridical_id"];
+  string person_id = 2 [json_name = "person_id"];
+}
+
+message ListRepresentativesResponse {
+  repeated Representative data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message Representative {
+  string id = 1 [json_name = "id"];
+  string name = 2 [json_name = "name"];
+}

@@ -1,0 +1,646 @@
+syntax = "proto3";
+package insurflex.core.v1;
+option go_package = "gitlab.hama.net/services/protobuf/go/insurflex/core/v1";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service CoreService{
+  rpc CreateCoverage(CreateCoverageRequest) returns (CreateCoverageResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/core/coverage",
+      body: "*",
+    };
+  }
+
+  rpc UpdateCoverage(UpdateCoverageRequest) returns (UpdateCoverageResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/core/coverage/{id}",
+      body: "*",
+    };
+  }
+  rpc GetCoverage(GetCoverageRequest) returns (GetCoverageResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/coverage/{id}",
+    };
+  }
+  rpc ListCoverages(ListCoveragesRequest) returns (ListCoveragesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/coverages",
+    };
+  }
+  rpc DeleteCoverage(DeleteCoverageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/core/coverage/{id}",
+    };
+  }
+  rpc LinkCoverageToCommitment(LinkCoverageToCommitmentRequest) returns (LinkCoverageToCommitmentResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/core/commitment/{commitment_id}/coverage/{coverage_id}/link",
+      body: "*",
+    };
+  }
+  rpc UnlinkCoverageFromCommitment(UnlinkCoverageFromCommitmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/core/commitment/coverage/link/{link_id}",
+      body: "*",
+    };
+  }
+
+  rpc GetCommitment(GetCommitmentRequest) returns (GetCommitmentResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/commitment/{id}",
+    };
+  }
+
+  rpc GetCommitmentByGlobalID(GetCommitmentWithGlobalIDRequest) returns (GetCommitmentResponse) {}
+
+  rpc CreateCommitment(CreateCommitmentRequest) returns (CreateCommitmentResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/core/commitment",
+      body: "*",
+    };
+  }
+  rpc UpdateCommitment(UpdateCommitmentRequest) returns (UpdateCommitmentResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/core/commitment/{id}",
+      body: "*",
+    };
+  }
+  rpc ListCommitmentsBySectorID(ListCommitmentsBySectorIDRequest) returns (ListCommitmentsBySectorIDResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/sector/{id}/commitments",
+    };
+  }
+  rpc ListCommitmentsByProductID(ListCommitmentsByProductIDRequest) returns (ListCommitmentsByProductIDResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/product/{id}/commitments",
+    };
+  }
+  rpc ListCommitments(ListCommitmentsRequest) returns (ListCommitmentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/commitments",
+    };
+  }
+  rpc DeleteCommitment(DeleteCommitmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/core/commitment/{id}",
+    };
+  }
+
+  rpc CreateSector(CreateSectorRequest) returns (CreateSectorResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/core/sector",
+      body: "*",
+    };
+  }
+  rpc UpdateSector(UpdateSectorRequest) returns (UpdateSectorResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/core/sector/{id}",
+      body: "*",
+    };
+  }
+  rpc GetSector(GetSectorRequest) returns (GetSectorResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/sector",
+    };
+  }
+  rpc ListSectors(ListSectorsRequest) returns (ListSectorsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/sectors",
+    };
+  }
+  rpc DeleteSector(DeleteSectorRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/core/sector/{id}",
+    };
+  }
+
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {}
+  rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse) {}
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse) {}
+  rpc GetFullProduct(GetFullProductRequest) returns (GetFullProductResponse) {}
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse) {}
+  rpc DeleteProduct(DeleteProductRequest) returns (google.protobuf.Empty) {}
+  rpc LinkCommitmentToProduct(LinkCommitmentToProductRequest) returns (LinkCommitmentToProductResponse) {}
+  rpc UnlinkCommitmentFromProduct(UnlinkCommitmentFromProductRequest) returns (google.protobuf.Empty) {}
+  rpc UpdateProductCommitmentBaseFlag(UpdateProductCommitmentBaseFlagRequest) returns (google.protobuf.Empty) {}
+  rpc UpdateProductCommitmentMandatoryFlag(UpdateProductCommitmentMandatoryFlagRequest) returns (google.protobuf.Empty) {}
+  rpc UpdateProductCommitmentMLR(UpdateProductCommitmentMLRRequest) returns (google.protobuf.Empty) {}
+
+  rpc CreateProposal(CreateProposalRequest) returns (CreateProposalResponse) {}
+  rpc UpdatePolicy(UpdatePolicyRequest) returns (UpdatePolicyResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1/core/policy/{policy_id}"
+      body: "*"
+    };
+  }
+  rpc GetPolicy(GetPolicyRequest) returns (GetPolicyResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/policy/{id}"
+    };
+  }
+  rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/core/policy"
+    };
+  }
+  rpc DeletePolicy(DeletePolicyRequest) returns (google.protobuf.Empty) {}
+}
+
+//
+//    MESSAGES
+//
+message Metadata {
+  uint32 total = 1 [json_name = "total"];
+  uint32 current_page = 2 [json_name = "current_page"];
+  uint32 page_size = 3 [json_name = "page_size"];
+}
+
+
+// Coverage
+message BaseCoverage {
+  string id = 1 [json_name = "id"];
+  string global_id = 2 [json_name = "global_id"];
+  string title = 3 [json_name = "title"];
+  string description = 4 [json_name = "description"];
+  string status = 5 [json_name = "status"];
+  string created_at = 7 [json_name = "created_at"];
+  string updated_at = 8 [json_name = "updated_at"];
+}
+
+message CreateCoverageRequest {
+  string global_id = 1 [json_name = "global_id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string status = 4 [json_name = "status"];
+}
+message CreateCoverageResponse {
+  string id = 1 [json_name = "id"];
+}
+
+message GetCoverageRequest {
+  string id = 1 [json_name = "id"];
+}
+message GetCoverageResponse {
+  BaseCoverage data = 1 [json_name = "data"];
+}
+
+message ListCoveragesRequest {
+  optional string commitment_id = 1 [json_name = "commitment_id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+  optional string search_query = 4 [json_name = "search_query"];
+  optional string sector_id = 5 [json_name = "sector_id"];
+}
+message ListCoveragesResponse {
+  repeated BaseCoverage data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message UpdateCoverageRequest {
+  string global_id = 1 [json_name = "global_id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string status = 4 [json_name = "status"];
+  string id = 5 [json_name = "id"];
+}
+message UpdateCoverageResponse {
+  BaseCoverage data = 1 [json_name = "data"];
+}
+
+message DeleteCoverageRequest {
+  string id = 1 [json_name = "id"];
+}
+//------------------------------------------------
+
+// Commitment
+message BaseCommitment {
+  string id = 1 [json_name = "id"];
+  string global_id = 2 [json_name = "global_id"];
+  string title = 3 [json_name = "title"];
+  string description = 4 [json_name = "description"];
+  string status = 5 [json_name = "status"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
+  uint64 link_id = 8 [json_name = "link_id"];
+  bool is_mandatory = 9 [json_name = "is_mandatory"];
+  bool is_base = 10 [json_name = "is_base"];
+  double mlr = 11 [json_name = "mlr"];
+}
+message BaseCommitmentWithCoverages {
+  BaseCommitment data = 1 [json_name = "data"];
+  repeated BaseCoverage coverages = 2 [json_name = "coverages"];
+}
+
+message CreateCommitmentRequest {
+  string global_id = 1 [json_name = "global_id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string status = 4 [json_name = "status"];
+  repeated string coverages = 5 [json_name = "coverages"];
+  repeated string sectors = 6 [json_name = "sectors"];
+}
+message CreateCommitmentResponse {
+  string id = 1 [json_name = "id"];
+}
+
+message GetCommitmentRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message GetCommitmentWithGlobalIDRequest {
+  string global_id = 1 [json_name = "global_id"];
+}
+
+
+message GetCommitmentResponse {
+  BaseCommitment data = 1 [json_name = "data"];
+  repeated BaseCoverage coverages = 2 [json_name = "coverages"];
+  repeated BaseSector sectors = 3 [json_name = "sectors"];
+}
+
+message ListCommitmentsBySectorSlugRequest {
+  string slug = 1 [json_name = "slug"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+}
+message ListCommitmentsBySectorSlugResponse {
+  repeated BaseCommitment commitments = 1 [json_name = "commitments"];
+}
+
+message ListCommitmentsBySectorIDRequest {
+  string id = 1 [json_name = "id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+}
+message ListCommitmentsBySectorIDResponse {
+  repeated BaseCommitment commitments = 1 [json_name = "commitments"];
+}
+
+message ListCommitmentsByProductIDRequest {
+  string id = 1 [json_name = "id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+  optional bool is_base = 4 [json_name = "is_base"];
+  optional bool is_mandatory = 5 [json_name = "is_mandatory"];
+  optional double mlr = 6 [json_name = "mlr"];
+  repeated string commitment_ids = 7 [json_name = "commitment_ids"];
+}
+message ListCommitmentsByProductIDResponse {
+  repeated BaseCommitment data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message ListCommitmentsRequest {
+  optional uint32 page = 1 [json_name = "page"];
+  optional uint32 page_size = 2 [json_name = "page_size"];
+  optional string search_query = 3 [json_name = "search_query"];
+  optional string sector_id = 4 [json_name = "sector_id"];
+  optional string product_id = 5 [json_name = "product_id"];
+  optional string sector_slug = 6 [json_name = "sector_slug"];
+  repeated string commitment_ids = 7 [json_name = "commitment_ids"];
+}
+message ListCommitmentsResponse {
+  repeated BaseCommitment data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message DeleteCommitmentRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message UpdateCommitmentRequest {
+  string global_id = 1 [json_name = "global_id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string status = 4 [json_name = "status"];
+  string id = 5 [json_name = "id"];
+  repeated string coverages = 6 [json_name = "coverages"];
+  repeated string sectors = 7 [json_name = "sectors"];
+}
+message UpdateCommitmentResponse {
+  BaseCommitment data = 1 [json_name = "data"];
+}
+//------------------------------------------------
+
+// Sector
+message BaseSector {
+  string id = 1 [json_name = "id"];
+  string parent_id = 2 [json_name = "parent_id"];
+  string global_id = 3 [json_name = "global_id"];
+  string title = 4 [json_name = "title"];
+  string slug = 5 [json_name = "slug"];
+  string description = 6 [json_name = "description"];
+  string created_at = 7 [json_name = "created_at"];
+  string updated_at = 8 [json_name = "updated_at"];
+  repeated BaseSector children = 9 [json_name = "children"];
+}
+
+message CreateSectorRequest {
+  string global_id = 1 [json_name = "global_id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string slug = 4 [json_name = "slug"];
+  string parent_id = 5 [json_name = "parent_id"];
+}
+message CreateSectorResponse {
+  string id = 1 [json_name = "id"];
+}
+
+message GetSectorRequest {
+  optional string id = 1 [json_name = "id"];
+  optional string slug = 2 [json_name = "slug"];
+}
+
+message GetSectorResponse {
+  BaseSector data = 1 [json_name = "data"];
+}
+
+message ListSectorsRequest {
+  optional uint32 page = 1 [json_name = "page"];
+  optional uint32 page_size = 2 [json_name = "page_size"];
+  optional string search_query = 3 [json_name = "search_query"];
+}
+message ListSectorsResponse {
+  repeated BaseSector data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message DeleteSectorRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message UpdateSectorRequest {
+  string title = 1 [json_name = "title"];
+  string description = 2 [json_name = "description"];
+  string slug = 3 [json_name = "slug"];
+  string id = 4 [json_name = "id"];
+}
+message UpdateSectorResponse {
+  BaseSector data = 1 [json_name = "data"];
+}
+//------------------------------------------------
+
+// Product
+message BaseProduct {
+  string id = 1 [json_name = "id"];
+  string sector_id = 2 [json_name = "sector_id"];
+  string title = 3 [json_name = "title"];
+  string description = 4 [json_name = "description"];
+  string status = 5 [json_name = "status"];
+  string created_at = 6 [json_name = "created_at"];
+  string updated_at = 7 [json_name = "updated_at"];
+  string start_date = 8 [json_name = "start_date"];
+  string end_date = 9 [json_name = "end_date"];
+}
+
+message CreateProductRequest {
+  string sector_id = 1 [json_name = "sector_id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  repeated string commitments = 4 [json_name = "commitments"];
+  string start_date = 5 [json_name = "start_date"];
+  string end_date = 6 [json_name = "end_date"];
+}
+message CreateProductResponse {
+  string id = 1 [json_name = "id"];
+}
+
+message GetProductRequest {
+  string id = 1 [json_name = "id"];
+}
+message GetProductResponse {
+  BaseProduct data = 1 [json_name = "data"];
+}
+
+message GetFullProductRequest {
+  string id = 1 [json_name = "id"];
+}
+message GetFullProductResponse {
+  BaseProduct data = 1 [json_name = "data"];
+  repeated BaseCommitmentWithCoverages commitments = 2 [json_name = "commitments"];
+}
+
+message ListProductsRequest {
+  optional uint32 page = 1 [json_name = "page"];
+  optional uint32 page_size = 2 [json_name = "page_size"];
+  optional string search_query = 3 [json_name = "search_query"];
+  optional string sector_id = 4 [json_name = "sector_id"];
+  optional string status = 5 [json_name = "status"];
+}
+message ListProductsResponse {
+  repeated BaseProduct data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message DeleteProductRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message UpdateProductRequest {
+  string title = 1 [json_name = "title"];
+  string description = 2 [json_name = "description"];
+  string id = 3 [json_name = "id"];
+  string start_date = 4 [json_name = "start_date"];
+  string end_date = 5 [json_name = "end_date"];
+  string status = 6 [json_name = "status"];
+}
+message UpdateProductResponse {
+  BaseProduct data = 1 [json_name = "data"];
+}
+
+message LinkCommitmentToProductRequest {
+  string product_id = 1 [json_name = "product_id"];
+  string commitment_id = 2 [json_name = "commitment_id"];
+  bool is_base = 3 [json_name = "is_base"];
+  bool is_mandatory = 4 [json_name = "is_mandatory"];
+  optional double mlr = 5 [json_name = "mlr"];
+}
+message LinkCommitmentToProductResponse {
+  uint64 link_id = 1 [json_name = "link_id"];
+}
+
+message UnlinkCommitmentFromProductRequest {
+  uint64 link_id = 1 [json_name = "link_id"];
+}
+
+message UpdateProductCommitmentBaseFlagRequest {
+  string product_id = 1 [json_name = "product_id"];
+  string commitment_id = 2 [json_name = "commitment_id"];
+}
+
+message UpdateProductCommitmentMLRRequest {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  string product_id = 2 [json_name = "product_id"];
+  double mlr = 3 [json_name = "mlr"];
+}
+
+message UpdateProductCommitmentMandatoryFlagRequest {
+  string commitment_id = 1 [json_name = "commitment_id"];
+  string product_id = 2 [json_name = "product_id"];
+  bool is_mandatory = 3 [json_name = "is_mandatory"];
+}
+
+message LinkCoverageToCommitmentRequest {
+  string coverage_id = 1 [json_name = "coverage_id"];
+  string commitment_id = 2 [json_name = "commitment_id"];
+}
+message LinkCoverageToCommitmentResponse {
+  uint64 link_id = 1 [json_name = "link_id"];
+}
+
+message UnlinkCoverageFromCommitmentRequest {
+  uint64 link_id = 1 [json_name = "link_id"];
+}
+//------------------------------------------------
+
+// Policy
+message BasePolicy {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string owner_sector = 3 [json_name = "owner_sector"];
+  optional string policy_number = 4 [json_name = "policy_number"];
+  optional string global_number = 5 [json_name = "global_number"];
+  POLICY_STATUS status = 6 [json_name = "status"];
+  string created_at = 7 [json_name = "created_at"];
+  string updated_at = 8 [json_name = "updated_at"];
+  optional string status_insurer = 9 [json_name = "status_insurer"];
+  optional string status_policy_holder = 10 [json_name = "status_policy_holder"];
+  optional string start_date = 11 [json_name = "start_date"];
+  optional string end_date = 12 [json_name = "end_date"];
+  optional string issued_at = 13 [json_name = "issued_at"];
+  BaseProposalInfo proposal_info = 14 [json_name = "proposal_info"];
+  BasePolicyInfo policy_info = 15 [json_name = "policy_info"];
+  BaseCurrencyInfo currency_info = 16 [json_name = "currency_info"];
+  BasePolicyHolderInfo policy_holder_info = 17 [json_name ="policy_holder_info"];
+  repeated BaseProduct products = 18 [json_name = "products"];
+  optional PAYMENT_METHODS payment_method = 19 [json_name = "payment_method"];
+}
+
+message BaseProposalInfo {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string global_id = 4 [json_name = "global_id"];
+  uint32 activity_type_id = 5 [json_name = "activity_type_id"];
+  double actuary_discount_rate = 6 [json_name = "actuary_discount_rate"];
+  double actuary_surcharge_rate = 7 [json_name = "actuary_surcharge_rate"];
+  double contagious_surcharge_rate = 8 [json_name = "contagious_surcharge_rate"];
+  bool is_insurance_company = 9 [json_name = "is_insurance_company"];
+  bool is_stakeholder = 10 [json_name = "is_stakeholder"];
+  string pcm_id = 11 [json_name = "pcm_id"];
+  uint32 province_id = 12 [json_name = "province_id"];
+  double service_network_discount_rate = 13 [json_name = "service_network_discount_rate"];
+  SEASONS start_season = 14 [json_name = "start_season"];
+  uint32 estimated_insured_count = 15 [json_name = "estimated_insured_count"];
+  double portfolio_discount_rate = 16 [json_name = "portfolio_discount_rate"];
+}
+
+enum SEASONS {
+  SPRING = 0;
+  SUMMER = 1;
+  AUTUMN = 2;
+  WINTER = 3;
+}
+
+enum POLICY_HOLDER_TYPE {
+  NATURAL = 0;
+  JURIDICAL = 1;
+}
+
+enum PAYMENT_METHODS {
+  DEBIT = 0;
+  EMI = 1;
+  CIP = 2;
+}
+
+enum POLICY_STATUS {
+  PENDING = 0;
+  NEGOTIATING = 1;
+  CANCELLED = 2;
+  ISSUED = 3;
+  RESERVED = 4;
+}
+
+message BasePolicyInfo {
+  optional string number = 1 [json_name = "number"];
+  optional string global_id = 2 [json_name = "global_id"];
+  optional string previous_id = 3 [json_name = "previous_id"];
+  optional string previous_global_id = 4 [json_name = "previous_global_id"];
+  optional string previous_insurer = 5 [json_name = "previous_insurer"];
+}
+
+message BaseCurrencyInfo {
+  string type_id = 1 [json_name = "type_id"];
+  double rate = 2 [json_name = "rate"];
+}
+
+message BasePolicyHolderInfo {
+  optional string id = 1 [json_name = "id"];
+  optional POLICY_HOLDER_TYPE type = 2 [json_name = "type"];
+  optional string phone_number_id = 3 [json_name = "phone_number_id"];
+  optional string address_id = 4 [json_name = "address_id"];
+  optional string bank_account_id = 5 [json_name = "bank_account_id"];
+  optional string representative_id = 6 [json_name = "representative_id"];
+}
+
+message CreateProposalRequest {
+  repeated string products = 1 [json_name = "products"];
+  string owner_sector = 4 [json_name = "owner_sector"];
+  BaseProposalInfo proposal_info = 11 [json_name = "proposal_info"];
+  PAYMENT_METHODS payment_method = 17 [json_name = "payment_method"];
+  string title = 16 [json_name = "title"];
+}
+
+message CreateProposalResponse {
+  string id = 1 [json_name = "id"];
+}
+
+message UpdatePolicyRequest {
+  string policy_id = 1 [json_name = "id"];
+  optional string policy_number = 2 [json_name = "policy_number"];
+  optional string global_number = 3 [json_name = "global_number"];
+  optional string start_date = 9 [json_name = "start_date"];
+  optional string end_date = 10 [json_name = "end_date"];
+  optional PAYMENT_METHODS payment_method = 17 [json_name = "payment_method"];
+  optional BaseProposalInfo proposal_info = 11 [json_name = "proposal_info"];
+  optional BasePolicyHolderInfo policy_holder_info = 14 [json_name = "policy_holder_info"];
+}
+message UpdatePolicyResponse {
+  BasePolicy data = 1 [json_name = "data"];
+}
+
+message GetPolicyRequest {
+  string id = 1 [json_name = "id"];
+}
+message GetPolicyResponse {
+  BasePolicy data = 1 [json_name = "data"];
+}
+
+message ListPoliciesRequest {
+  optional uint32 page = 1 [json_name = "page"];
+  optional uint32 page_size = 2 [json_name = "page_size"];
+  optional string sector_id = 3 [json_name = "sector_id"];
+  optional string product_id = 4 [json_name = "product_id"];
+}
+message ListPoliciesResponse {
+  repeated BasePolicy data = 1 [json_name = "data"];
+  optional Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message DeletePolicyRequest {
+  string id = 1 [json_name = "id"];
+}
+
+
+//------------------------------------------------
+
+message BadRequest {
+  repeated FieldError violations = 1 [json_name = "violations"];
+}
+
+message FieldError {
+  string field = 1;
+  string description = 2;
+}
+
+

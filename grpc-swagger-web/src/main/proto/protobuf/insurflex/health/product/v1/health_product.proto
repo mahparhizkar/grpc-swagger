@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "core/v1/core.proto";
+import "health/product/v1/health_common.proto";
+import "health/product/v1/health_product_commitment_coverages_common.proto";
+
+service HealthProductService {
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/products",
+      body: "*"
+    };
+  }
+
+  rpc ListProducts(.insurflex.core.v1.ListProductsRequest) returns (.insurflex.core.v1.ListProductsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/products"
+    };
+  }
+
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/products/{product_id}"
+    };
+  }
+
+  rpc UpdateProduct(UpdateProductRequest) returns (.insurflex.core.v1.UpdateProductResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/products/{id}",
+      body: "*"
+    };
+  }
+
+  rpc EnableProduct(UpdateProductStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/products/{product_id}/enable"
+    };
+  }
+
+  rpc DisableProduct(UpdateProductStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/products/{product_id}/disable"
+    };
+  }
+
+  rpc DeleteProduct(DeleteProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/products/{product_id}"
+    };
+  }
+}
+//----------------------------------------
+message ProductInfo {
+  string id = 1 [json_name = "id"];
+  string product_id = 2 [json_name = "product_id"];
+  repeated string commitments = 3 [json_name = "commitments"];
+  string relatives_model_id = 4 [json_name = "relatives_model_id"];
+  repeated MetaDataShow relatives_model_data = 5 [json_name = "relatives_model_data"];
+  repeated string pricing_conditions = 6 [json_name = "pricing_conditions"];
+  string created_at = 7 [json_name = "created_at"];
+  string updated_at = 8 [json_name = "updated_at"];
+}
+
+message CreateProductRequest {
+  string title = 1 [json_name = "title"];
+  string description = 2 [json_name = "description"];
+  string start_date = 3 [json_name = "start_date"];
+  string end_date = 4 [json_name = "end_date"];
+}
+
+message CreateProductResponse {
+  string product_id = 1 [json_name = "product_id"];
+}
+//----------------------------------------
+message GetProductRequest {
+  string product_id = 1 [json_name = "product_id"];
+}
+
+message GetProductResponse {
+  .insurflex.core.v1.BaseProduct data = 1 [json_name = "data"];
+  ProductInfo info = 2 [json_name = "info"];
+  repeated ProductCommitment commitments = 3 [json_name = "commitments"];
+}
+//----------------------------------------
+message DeleteProductRequest {
+  string product_id = 1 [json_name = "product_id"];
+}
+//----------------------------------------
+message UpdateProductRequest {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string start_date = 4 [json_name = "start_date"];
+  string end_date = 5 [json_name = "end_date"];
+}
+//----------------------------------------
+message UpdateProductStatusRequest {
+  string product_id = 1 [json_name = "product_id"];
+}
+//----------------------------------------

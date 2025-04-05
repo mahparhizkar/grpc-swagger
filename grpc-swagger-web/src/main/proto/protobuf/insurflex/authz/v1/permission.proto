@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package insurflex.authz.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "shared/options.proto";
+
+service PermissionService {
+  rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/permissions"
+    };
+  }
+  rpc CreatePermission(CreatePermissionRequest) returns (google.protobuf.Empty) {}
+}
+
+message CreatePermissionRequest {
+  string fqmn = 1 [json_name = "fqmn"];
+  string permission = 2 [json_name = "permission"];
+}
+
+message ListPermissionsRequest {
+  string role_id = 1 [json_name = "role_id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+}
+
+message ListPermissionsResponse {
+  repeated Permission data = 1 [json_name = "data"];
+  Metadata metadata = 2 [json_name = "metadata"];
+}
+
+message Permission {
+  string created_at = 1 [json_name = "created_at"];
+  string updated_at = 2 [json_name = "updated_at"];
+  string slug = 3 [json_name = "slug"];
+  string title = 4 [json_name = "title"];
+}
+
+message Metadata {
+  uint32 total = 1 [json_name = "total"];
+  uint32 current_page = 2 [json_name = "current_page"];
+  uint32 page_size = 3 [json_name = "page_size"];
+}
+
+message GetAssignedPermissionsRequest {
+  string role_id = 1 [json_name = "role_id"];
+  optional uint32 page = 2 [json_name = "page"];
+  optional uint32 page_size = 3 [json_name = "page_size"];
+}

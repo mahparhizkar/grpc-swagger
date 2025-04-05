@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package com.insurflex.identities.v1;
+
+option go_package = "insurflex/identities/v1";
+
+import "google/protobuf/empty.proto";
+import "identities/v1/shared.proto";
+
+service PersonInfoService {
+  rpc ListPersonBankAccounts(PersonRequest) returns (ListPersonBankAccountsResponse);
+  rpc CreatePersonBankAccount(CreatePersonBankAccountRequest) returns(google.protobuf.Empty);
+  rpc GetPersonBankAccount(GetPersonBankAccountRequest) returns(GetPersonBankAccountResponse);
+
+  rpc ListPersonAddresses(PersonRequest) returns (ListPersonAddressesResponse);
+  rpc CreatePersonAddress(CreatePersonAddressRequest) returns (google.protobuf.Empty);
+  rpc DeletePersonAddress(DeletePersonAddressRequest) returns (google.protobuf.Empty);
+  rpc UpdatePersonAddress(UpdatePersonAddressRequest) returns (google.protobuf.Empty);
+  rpc GetPersonAddress(GetPersonAddressRequest) returns(GetPersonAddressResponse);
+
+  rpc ListPersonPhoneNumbers(PersonRequest) returns (ListPersonPhoneNumbersResponse);
+  rpc CreatePersonPhoneNumber(CreatePersonPhoneNumberRequest) returns (google.protobuf.Empty);
+  rpc DeletePersonPhoneNumber(DeletePersonPhoneNumberRequest) returns (google.protobuf.Empty);
+  rpc UpdatePersonPhoneNumber(UpdatePersonPhoneNumberRequest) returns (google.protobuf.Empty);
+  rpc GetPersonPhoneNumber(GetPhoneNumberRequest) returns(GetPhoneNumberResponse);
+}
+
+message GetPersonBankAccountRequest {
+  string person_id = 1;
+  string bank_account_id = 2;
+}
+
+message GetPersonBankAccountResponse {
+  BaseBankAccount data = 1 [json_name = "bank_account"];
+}
+
+message GetPhoneNumberRequest{
+  string person_id = 1;
+  string phone_number_id = 2;
+}
+
+message GetPhoneNumberResponse {
+  string phone_number = 1;
+}
+
+message CreatePersonBankAccountRequest {
+  string title = 1;
+  optional string bank_id = 2;
+  string acc_number = 3;
+  string iban = 4;
+  string person_id = 5;
+}
+
+message PersonRequest {
+  string person_id = 1;
+}
+
+message GetPersonAddressRequest {
+  string person_id = 1;
+  string address_id = 2;
+}
+
+message GetPersonAddressResponse {
+  string address = 1;
+}
+
+message ListPersonBankAccountsResponse {
+  repeated BaseBankAccount data = 1 [json_name = "bank_account"];
+}
+
+message ListPersonAddressesResponse {
+  repeated BaseAddress data = 1;
+}
+
+message CreatePersonAddressRequest {
+  string person_id = 1[json_name = "person_id"];
+  string address = 5 [json_name = "address"];
+  uint64 city_id = 4 [json_name = "city_id"];
+  string zip_code = 6 [json_name = "zip_code"];
+  bool is_default = 7 [json_name = "is_default"];
+}
+
+message UpdatePersonAddressRequest {
+  string address_id = 1 [json_name = "address_id"];
+  string address = 5 [json_name = "address"];
+  uint64 city_id = 4 [json_name = "city_id"];
+  string zip_code = 6 [json_name = "zip_code"];
+  bool is_default = 7 [json_name = "is_default"];
+}
+
+message DeletePersonAddressRequest {
+  string address_id = 1 [json_name = "address_id"];
+}
+
+message SetDefaultAddressRequest {
+  string address_id = 1 [json_name = "address_id"];
+}
+
+message CreatePersonPhoneNumberRequest {
+  string person_id = 1 [json_name = "persons_id"];
+  string Number = 2 [json_name = "number"];
+  PhoneType phone_type = 3 [json_name = "phone_type"];
+}
+
+message DeletePersonPhoneNumberRequest {
+  string phone_number_id = 1 [json_name = "phone_number_id"];
+}
+
+message UpdatePersonPhoneNumberRequest {
+  string phone_number_id = 1 [json_name = "phone_number_id"];
+  string number = 2 [json_name = "number"];
+  string country_code = 4 [json_name = "country_code"];
+  optional PhoneType phone_type = 5 [json_name = "phone_type"];
+}
+
+message ListPersonPhoneNumbersResponse {
+  repeated BasePhoneNumber data = 1 [json_name = "data"];
+}

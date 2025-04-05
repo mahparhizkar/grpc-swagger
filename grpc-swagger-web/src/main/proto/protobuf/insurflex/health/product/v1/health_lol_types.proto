@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "health/product/v1/health_common.proto";
+
+service HealthLolTypesService {
+  rpc CreateLolType(CreateLolTypeRequest) returns (CreateLolTypeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/lol-types",
+      body: "*"
+    };
+  }
+
+  rpc GetLolType(GetLolTypeRequest) returns (GetLolTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/lol-types/{id}"
+    };
+  }
+
+  rpc ListLolTypes(PageableRequest) returns (ListLolTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/lol-types"
+    };
+  }
+
+  rpc UpdateLolType(UpdateLolTypeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/lol-types/{id}",
+      body: "*"
+    };
+  }
+
+  rpc DeleteLolType(DeleteLolTypeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1/health/lol-types/{id}"
+    };
+  }
+}
+//----------------------------------------
+message CreateLolTypeRequest {
+  string title = 1 [json_name = "title"];
+  optional string slug = 2 [json_name = "slug"];
+}
+
+message CreateLolTypeResponse {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string slug = 3 [json_name = "slug"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+//----------------------------------------
+message GetLolTypeRequest {
+  string id = 1 [json_name = "id"];
+}
+
+message GetLolTypeResponse {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string slug = 3 [json_name = "slug"];
+  string created_at = 4 [json_name = "created_at"];
+  string updated_at = 5 [json_name = "updated_at"];
+}
+//----------------------------------------
+message ListLolTypesResponse {
+  repeated GetLolTypeResponse lol_types = 1 [json_name = "data"];
+  PageableResponse pageable_response = 2 [json_name = "metadata"];
+}
+//----------------------------------------
+message UpdateLolTypeRequest {
+  string id = 1 [json_name = "id"];
+  optional string title = 2 [json_name = "title"];
+  optional string slug = 3 [json_name = "slug"];
+}
+//----------------------------------------
+message DeleteLolTypeRequest {
+  string id = 1 [json_name = "id"];
+}
+//----------------------------------------

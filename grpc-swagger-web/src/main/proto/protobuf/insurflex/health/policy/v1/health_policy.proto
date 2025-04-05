@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package com.insurflex.health.policy.grpc.v1;
+option java_package = "com.insurflex.health.policy.grpc.v1";
+option java_multiple_files = true;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "core/v1/core.proto";
+import "premium/v1/health.proto";
+
+service HealthPolicyService {
+
+  rpc CreateProposal(.insurflex.core.v1.CreateProposalRequest) returns (.insurflex.core.v1.CreateProposalResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/health/policies/proposal",
+      body: "*"
+    };
+  }
+
+  rpc GetProposal(.insurflex.core.v1.GetPolicyRequest) returns (.insurflex.core.v1.GetPolicyResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/policies/proposal/{id}"
+    };
+  }
+
+  rpc ListProposals(.insurflex.core.v1.ListPoliciesRequest) returns (.insurflex.core.v1.ListPoliciesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/policies/proposals"
+    };
+  }
+
+  rpc CreateGroupPremium(com.insurflex.premium.v1.CreateGroupPremiumRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/health/policies/premium",
+      body: "*",
+    };
+  }
+
+  rpc GetGroupPremium(com.insurflex.premium.v1.GetGroupPremiumRequest) returns (com.insurflex.premium.v1.GetGroupPremiumResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/policies/premium/{policy_id}"
+    };
+  }
+
+  rpc GetProposalInstallment(GetProposalInstallmentRequest) returns (GetProposalInstallmentResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/policies/installment/{policy_id}"
+    };
+  }
+
+  rpc GetProposalStatus(GetProposalStatusRequest) returns (GetProposalStatusResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/health/policies/proposal/status/{policy_id}"
+    };
+  }
+
+  rpc UpdateProposal(.insurflex.core.v1.UpdatePolicyRequest) returns (.insurflex.core.v1.UpdatePolicyResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1/health/policies/proposal/{policy_id}",
+      body: "*",
+    };
+  }
+}
+
+message GetProposalInstallmentRequest {
+  string policy_id = 1 [json_name = "policy_id"];
+}
+
+message GetProposalInstallmentResponse {
+  repeated Installment installments = 1 [json_name = "installments"];
+}
+
+message Installment {
+  string id = 1 [json_name = "id"];
+  string title = 2 [json_name = "title"];
+  string description = 3 [json_name = "description"];
+  string due_date = 4 [json_name = "due_date"];
+  double amount = 5 [json_name = "amount"];
+}
+
+message GetProposalStatusRequest{
+  string policy_id = 1 [json_name = "policy_id"];
+}
+
+message GetProposalStatusResponse{
+  string additional_info_status = 1 [json_name = "additional_info_status"];
+  string policy_holder_status = 2 [json_name = "policy_holder_status"];
+  string attachment_status = 3 [json_name = "attachment_status"];
+  string installment_status = 4 [json_name = "installment_status"];
+}

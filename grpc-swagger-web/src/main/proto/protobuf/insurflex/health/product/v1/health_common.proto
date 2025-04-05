@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package com.insurflex.health.product.grpc.v1;
+option java_package = "com.insurflex.health.product.grpc.v1";
+option java_multiple_files = true;
+
+message PageableRequest {
+  optional int32 page = 1 [json_name = "page"];
+  optional int32 page_size = 2 [json_name = "page_size"];
+}
+
+message PageableResponse {
+  uint32 total = 1 [json_name = "total"];
+  uint32 current_page = 2 [json_name = "current_page"];
+  uint32 page_size = 3 [json_name = "page_size"];
+}
+//----------------------------------------
+message ErrorDetail {
+  map<string, string> errors = 1 [json_name = "errors"];
+}
+//----------------------------------------
+message ErrorResponse {
+  int32 error_code = 1 [json_name = "error_code"];
+  string error_message = 2 [json_name = "error_message"];
+  optional string details = 3 [json_name = "details"];
+}
+//----------------------------------------
+message MetaData {
+  string slug = 1 [json_name = "slug"];
+  MetaDataDetails data_details = 2 [json_name = "data_details"];
+}
+//----------------------------------------
+message MetaDataDetails {
+  string title = 1 [json_name = "title"];
+  string entry_code = 3 [json_name = "entry_code"];
+  string relatives_type_id = 4 [json_name = "relatives_type_id"];
+  string lol_type_id = 5 [json_name = "lol_type_id"];
+  optional LOL_FLOATING_LIMIT_MEASURE lol_floating_limit_measure = 6 [json_name = "lol_floating_limit_measure"];
+  optional string lol_floating_limit_value = 7 [json_name = "lol_floating_limit_value"];
+}
+//----------------------------------------
+message MetaDataShow {
+  string title = 1 [json_name = "title"];
+  string slug = 2 [json_name = "slug"];
+  string entry_code = 3 [json_name = "entry_code"];
+  string relatives_type_id = 4 [json_name = "relatives_type_id"];
+  string lol_type_id = 5 [json_name = "lol_type_id"];
+  optional LOL_FLOATING_LIMIT_MEASURE lol_floating_limit_measure = 6 [json_name = "lol_floating_limit_measure"];
+  optional string lol_floating_limit_value = 7 [json_name = "lol_floating_limit_value"];
+}
+//----------------------------------------
+enum LOL_FLOATING_LIMIT_MEASURE {
+  LOL_NOT_SET = 0;
+  LOL_AMOUNT = 1;
+  LOL_COUNT = 2;
+}

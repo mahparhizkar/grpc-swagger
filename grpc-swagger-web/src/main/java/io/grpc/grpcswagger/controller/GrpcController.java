@@ -1,5 +1,33 @@
 package io.grpc.grpcswagger.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.google.common.net.HostAndPort;
+import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
+import io.grpc.ManagedChannel;
+import io.grpc.grpcswagger.config.AppConfig;
+import io.grpc.grpcswagger.manager.ServiceConfigManager;
+import io.grpc.grpcswagger.model.*;
+import io.grpc.grpcswagger.openapi.v2.SwaggerV2DocumentView;
+import io.grpc.grpcswagger.openapi.v2.SwaggerV2Documentation;
+import io.grpc.grpcswagger.service.DocumentService;
+import io.grpc.grpcswagger.service.DocumentService2;
+import io.grpc.grpcswagger.service.GrpcProxyService;
+import io.grpc.grpcswagger.utils.ChannelFactory;
+import io.grpc.grpcswagger.utils.SwaggerV2Documentation2;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
 import static io.grpc.CallOptions.DEFAULT;
 import static io.grpc.grpcswagger.manager.ServiceConfigManager.getServiceConfigs;
 import static io.grpc.grpcswagger.model.Result.error;
@@ -8,42 +36,6 @@ import static io.grpc.grpcswagger.utils.ServiceRegisterUtils.getServiceNames;
 import static io.grpc.grpcswagger.utils.ServiceRegisterUtils.registerByIpAndPort;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Map;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.google.common.net.HostAndPort;
-import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
-
-import io.grpc.ManagedChannel;
-import io.grpc.grpcswagger.config.AppConfig;
-import io.grpc.grpcswagger.manager.ServiceConfigManager;
-import io.grpc.grpcswagger.model.CallResults;
-import io.grpc.grpcswagger.model.GrpcMethodDefinition;
-import io.grpc.grpcswagger.model.RegisterParam;
-import io.grpc.grpcswagger.model.Result;
-import io.grpc.grpcswagger.model.ServiceConfig;
-import io.grpc.grpcswagger.openapi.v2.SwaggerV2DocumentView;
-import io.grpc.grpcswagger.openapi.v2.SwaggerV2Documentation;
-import io.grpc.grpcswagger.service.DocumentService;
-import io.grpc.grpcswagger.service.GrpcProxyService;
-import io.grpc.grpcswagger.utils.ChannelFactory;
-import lombok.SneakyThrows;
 
 /**
  * @author liuzhengyang
@@ -58,12 +50,20 @@ public class GrpcController {
     @Autowired
     private GrpcProxyService grpcProxyService;
 
+    private DocumentService2 documentService2;
+
     @Autowired
     private DocumentService documentService;
 
     @PostConstruct
     public void init() {
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+    }
+
+    @RequestMapping("/v2/api-docs2")
+    public SwaggerV2Documentation2 groupResponse2(@RequestParam("service") String service, HttpServletRequest httpServletRequest) {
+        String apiHost = httpServletRequest.getHeader("Host");
+        return documentService2.getDocumentation(service, apiHost);
     }
 
     @RequestMapping("/v2/api-docs")
