@@ -6,7 +6,7 @@ import lombok.Data;
  * @author liuzhengyang
  */
 @Data
-class ResponseObject {
+public class ResponseObject {
     private String code;
     private ParameterSchema schema;
 }

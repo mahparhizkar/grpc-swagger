@@ -8,7 +8,7 @@ import lombok.Data;
  * @author liuzhengyang
  */
 @Data
-class ParameterSchema {
+public class ParameterSchema {
     @JsonProperty("$ref")
     private String ref;
 }

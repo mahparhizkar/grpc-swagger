@@ -10,7 +10,7 @@ import lombok.Data;
  * @author liuzhengyang
  */
 @Data
-class Operation {
+public class Operation {
     private String description;
     private String operationId;
     private List<Parameter> parameters;

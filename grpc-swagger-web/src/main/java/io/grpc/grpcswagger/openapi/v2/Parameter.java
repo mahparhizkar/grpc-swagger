@@ -6,7 +6,7 @@ import lombok.Data;
  * @author liuzhengyang
  */
 @Data
-class Parameter {
+public class Parameter {
     private String in = "body";
     private String name;
     private String description;

@@ -50,6 +50,7 @@ public class GrpcController {
     @Autowired
     private GrpcProxyService grpcProxyService;
 
+    @Autowired
     private DocumentService2 documentService2;
 
     @Autowired
