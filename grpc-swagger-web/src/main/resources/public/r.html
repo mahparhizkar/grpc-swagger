@@ -88,7 +88,7 @@
     const baseUrlKey = "baseUrl"
     const endpointKey = "endpoint"
     const linkPattern = "<li><a href='index.html?url={0}' target='_blank'>{1}</a></li>"
-    const apiUrl = "{0}/v2/api-docs2?service={1}"
+    const apiUrl = "{0}/v2/api-docs2?service={1}&endpoint={2}"
     const scheme = "http://";
     let serverBaseUrl, endpoint
 
@@ -123,7 +123,7 @@
             success: function (e) {
                 let services = e.data
                 services.forEach(function (element) {
-                    let url = encodeURIComponent(apiUrl.format(serverBaseUrl, element['service']));
+                    let url = encodeURIComponent(apiUrl.format(serverBaseUrl, element['service'], endpoint));
                     $("#services-display").append(linkPattern.format(url, element['service']));
                 })
             },

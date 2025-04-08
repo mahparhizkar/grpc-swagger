@@ -15,6 +15,7 @@ import io.grpc.grpcswagger.service.DocumentService;
 import io.grpc.grpcswagger.service.DocumentService2;
 import io.grpc.grpcswagger.service.GrpcProxyService;
 import io.grpc.grpcswagger.utils.ChannelFactory;
+import io.grpc.grpcswagger.utils.SwaggerV2DocumentView2;
 import io.grpc.grpcswagger.utils.SwaggerV2Documentation2;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,9 +63,12 @@ public class GrpcController {
     }
 
     @RequestMapping("/v2/api-docs2")
-    public SwaggerV2Documentation2 groupResponse2(@RequestParam("service") String service, HttpServletRequest httpServletRequest) {
+    public Object groupResponse2(@RequestParam("service") String service,
+                                 HttpServletRequest httpServletRequest) {
         String apiHost = httpServletRequest.getHeader("Host");
-        return documentService2.getDocumentation(service, apiHost);
+        String endpoint = httpServletRequest.getParameter("endpoint");
+        SwaggerV2Documentation2 documentation = documentService2.getDocumentation(service, apiHost, endpoint);
+        return new SwaggerV2DocumentView2(service, documentation);
     }
 
     @RequestMapping("/v2/api-docs")
@@ -111,7 +115,7 @@ public class GrpcController {
         if (!AppConfig.enableListService()) {
             return Result.error("Not support this action.");
         }
-       return Result.success(getServiceConfigs());
+        return Result.success(getServiceConfigs());
     }
 
     @RequestMapping("/register")
