@@ -1,4 +1,4 @@
-package io.grpc.grpcswagger.utils;
+package io.grpc.grpcswagger.openapi.v2;
 
 import io.grpc.grpcswagger.model.GrpcMethod;
 import io.grpc.grpcswagger.openapi.v2.*;

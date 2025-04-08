@@ -1,8 +1,5 @@
-package io.grpc.grpcswagger.utils;
+package io.grpc.grpcswagger.openapi.v2;
 
-import io.grpc.grpcswagger.openapi.v2.DefinitionType;
-import io.grpc.grpcswagger.openapi.v2.InfoObject;
-import io.grpc.grpcswagger.openapi.v2.PathItem;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
