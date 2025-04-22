@@ -15,8 +15,6 @@ import io.grpc.grpcswagger.service.DocumentService;
 import io.grpc.grpcswagger.service.DocumentService2;
 import io.grpc.grpcswagger.service.GrpcProxyService;
 import io.grpc.grpcswagger.utils.ChannelFactory;
-import io.grpc.grpcswagger.openapi.v2.SwaggerV2DocumentView2;
-import io.grpc.grpcswagger.openapi.v2.SwaggerV2Documentation2;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
@@ -63,12 +61,11 @@ public class GrpcController {
     }
 
     @RequestMapping("/v2/api-docs2")
-    public Object groupResponse2(@RequestParam("service") String service,
-                                 HttpServletRequest httpServletRequest) {
+    public Object groupResponse2(@RequestParam("service") String service, HttpServletRequest httpServletRequest) {
         String apiHost = httpServletRequest.getHeader("Host");
         String endpoint = httpServletRequest.getParameter("endpoint");
-        SwaggerV2Documentation2 documentation = documentService2.getDocumentation(service, apiHost, endpoint);
-        return new SwaggerV2DocumentView2(service, documentation);
+        SwaggerV2Documentation documentation = documentService2.getDocumentation(service, apiHost, endpoint);
+        return new SwaggerV2DocumentView(service, documentation);
     }
 
     @RequestMapping("/v2/api-docs")

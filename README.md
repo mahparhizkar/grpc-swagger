@@ -148,7 +148,7 @@ parameters：
 * `payload` - gRPC method parameters，JSON format。 You can use `endpoint` parameter to specify the calling endpoint.
 
 ### Swagger API
-url： `/v2/api-docs`
+url： `/v2/api-docs2`
 
 return data used by swagger-ui
 
